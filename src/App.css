@@ -1,15 +1,15 @@
-.App {
-  color: white;
+
+h1 {
+  font-size: 3rem;
   text-align: center;
 }
 
-h1 {
-  font-size: 20rem;
+body {
+  /* background-color: rgb(43, 142, 228); */
+  background: radial-gradient(circle, #80e4ba, #39c4b1);
 }
 
-.container {
-  width: 40rem;
-  height: 40rem;
-  background-color: green;
-
+.app {
+  width: 35rem;
+  height: 34rem;
 }
