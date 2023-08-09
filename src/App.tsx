@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import "./app.css";
 
 function App() {
-  const [habits, setHabits] = useState<string[]>([]); // Specify string[] type
-  const [habitInput, setHabitInput] = useState<string>(""); // Specify string type
+  const [habits, setHabits] = useState<string[]>([]);
+  const [habitInput, setHabitInput] = useState<string>("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Specify ChangeEvent type
     setHabitInput(event.target.value);
   };
 
   const handleAddHabit = (event: React.FormEvent<HTMLFormElement>) => {
-    // Specify FormEvent type
     event.preventDefault();
     if (habitInput.trim() !== "") {
       setHabits([...habits, habitInput.trim()]);
@@ -22,7 +20,7 @@ function App() {
   const handleDeleteTask = (index: number) => {
     setHabits((prevTasks) => {
       const updatedTasks = [...prevTasks];
-      updatedTasks.splice(index, 1); // Remove the task at the specified index
+      updatedTasks.splice(index, 1);
       return updatedTasks;
     });
   };
@@ -38,21 +36,24 @@ function App() {
           Add
         </button>
       </form>
+      // ...existing code...
       <div>
         {habits.map((habit, index) => (
-          <div key={index}>
+          <div key={index} className="habit-row">
             <div className="habitName">{habit} :</div>
-            {Array.from({ length: 31 }, (_, i) => i + 1).map((number) => (
-              <React.Fragment key={number}>
-                <label htmlFor={`habit-${index}-checkbox-${number}`}>
-                  {number}
-                </label>
-                <input
-                  type="checkbox"
-                  id={`habit-${index}-checkbox-${number}`}
-                />
-              </React.Fragment>
-            ))}
+            <div className="number-checkbox-container">
+              {Array.from({ length: 31 }, (_, i) => i + 1).map((number) => (
+                <div key={number} className="number-checkbox">
+                  <label htmlFor={`habit-${index}-checkbox-${number}`}>
+                    {number}
+                  </label>
+                  <input
+                    type="checkbox"
+                    id={`habit-${index}-checkbox-${number}`}
+                  />
+                </div>
+              ))}
+            </div>
             <button
               className="btn btn-danger"
               onClick={() => handleDeleteTask(index)}
@@ -62,6 +63,7 @@ function App() {
           </div>
         ))}
       </div>
+      // ...existing code...
     </div>
   );
 }
