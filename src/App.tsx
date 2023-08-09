@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./app.css";
 
 function App() {
   const [habits, setHabits] = useState<string[]>([]);
   const [habitInput, setHabitInput] = useState<string>("");
+
+  useEffect(() => {
+    // Load habits from local storage when the component mounts
+    const storedHabits = localStorage.getItem("habits");
+    if (storedHabits) {
+      setHabits(JSON.parse(storedHabits));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save habits to local storage whenever habits change
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }, [habits]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHabitInput(event.target.value);
@@ -36,7 +49,6 @@ function App() {
           Add
         </button>
       </form>
-      // ...existing code...
       <div>
         {habits.map((habit, index) => (
           <div key={index} className="habit-row">
@@ -63,7 +75,6 @@ function App() {
           </div>
         ))}
       </div>
-      // ...existing code...
     </div>
   );
 }
