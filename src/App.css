@@ -13,3 +13,8 @@ body {
   width: 35rem;
   height: 34rem;
 }
+
+.habitName {
+  font-size: 2rem;
+  font-weight: bold;
+}
