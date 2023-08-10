@@ -4,19 +4,34 @@ import "./app.css";
 function App() {
   const [habits, setHabits] = useState<string[]>([]);
   const [habitInput, setHabitInput] = useState<string>("");
+  const [checkboxStatus, setCheckboxStatus] = useState<boolean[][]>([]);
+  console.log(checkboxStatus);
 
+  //because useEffect has empty [] at the end, it exectues once when component is first shown
   useEffect(() => {
-    // Load habits from local storage when the component mounts
+    // gets previously saved habits from storage and sets it to storedHabits
     const storedHabits = localStorage.getItem("habits");
+    const storedCheckbox = localStorage.getItem("checkboxs");
+    //if there are habits
     if (storedHabits) {
+      //sets the habit array to the storedHabits
       setHabits(JSON.parse(storedHabits));
+    }
+    if (storedCheckbox) {
+      setCheckboxStatus(JSON.parse(storedCheckbox));
     }
   }, []);
 
+  //this useeffect has a dependency on [habits] so it runs whenever the variable changes
   useEffect(() => {
     // Save habits to local storage whenever habits change
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
+
+  useEffect(() => {
+    // Save habits to local storage whenever habits change
+    localStorage.setItem("checkboxs", JSON.stringify(checkboxStatus));
+  }, [checkboxStatus]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHabitInput(event.target.value);
@@ -26,8 +41,21 @@ function App() {
     event.preventDefault();
     if (habitInput.trim() !== "") {
       setHabits([...habits, habitInput.trim()]);
+      // Initialize a new checkbox status array with false values for each day
+      const newCheckboxStatus = new Array(31).fill(false);
+
+      // Append the new checkbox status array to the existing checkboxStatus array
+      setCheckboxStatus([...checkboxStatus, newCheckboxStatus]);
       setHabitInput("");
     }
+  };
+
+  const handleCheckboxChange = (index: number, number: number) => {
+    setCheckboxStatus((prevState) => {
+      const newState = [...prevState];
+      newState[index][number] = !newState[index][number]; // Toggle the checkbox status
+      return newState;
+    });
   };
 
   const handleDeleteTask = (index: number) => {
@@ -35,6 +63,11 @@ function App() {
       const updatedTasks = [...prevTasks];
       updatedTasks.splice(index, 1);
       return updatedTasks;
+    });
+    setCheckboxStatus((prevCheckboxStatus) => {
+      const updatedCheckboxStatus = [...prevCheckboxStatus];
+      updatedCheckboxStatus.splice(index, 1); // Remove the corresponding checkbox status
+      return updatedCheckboxStatus;
     });
   };
 
@@ -62,6 +95,8 @@ function App() {
                   <input
                     type="checkbox"
                     id={`habit-${index}-checkbox-${number}`}
+                    checked={checkboxStatus[index][number - 1]}
+                    onChange={() => handleCheckboxChange(index, number - 1)}
                   />
                 </div>
               ))}
