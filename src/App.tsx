@@ -5,6 +5,10 @@ function App() {
   const [habits, setHabits] = useState<string[]>([]);
   const [habitInput, setHabitInput] = useState<string>("");
   const [checkboxStatus, setCheckboxStatus] = useState<boolean[][]>([]);
+  const [streaks, setStreaks] = useState<number[]>(
+    Array(habits.length).fill(0)
+  );
+
   console.log(checkboxStatus);
 
   //because useEffect has empty [] at the end, it exectues once when component is first shown
@@ -33,6 +37,21 @@ function App() {
     localStorage.setItem("checkboxs", JSON.stringify(checkboxStatus));
   }, [checkboxStatus]);
 
+  // useEffect(() => {
+  //   const newStreaks = checkboxStatus.map((habitStatus) => {
+  //     let streak = 0;
+  //     for (let i = 0; i < habitStatus.length; i++) {
+  //       if (habitStatus[i]) {
+  //         streak++;
+  //       } else {
+  //         break;
+  //       }
+  //     }
+  //     return streak;
+  //   });
+  //   setStreaks(newStreaks);
+  // }, [checkboxStatus]);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHabitInput(event.target.value);
   };
@@ -55,6 +74,26 @@ function App() {
       const newState = [...prevState];
       newState[index][number] = !newState[index][number]; // Toggle the checkbox status
       return newState;
+    });
+
+    //changing streak
+    setStreaks((prevState) => {
+      const newState = [...prevState];
+      let count = 0;
+      if (checkboxStatus[index][number] == false) {
+        newState[index] = count;
+        return newState;
+      } else {
+        for (let i = number - 1; i == 0; i--) {
+          if (checkboxStatus[index][i]) {
+            count++;
+          } else {
+            break;
+          }
+        }
+        newState[index] = count;
+        return newState;
+      }
     });
   };
 
@@ -96,6 +135,7 @@ function App() {
         {habits.map((habit, index) => (
           <div key={index} className="habit-row">
             <div className="habitName">{habit} :</div>
+            <div className="streak">Streak: {streaks[index]}</div>
             <div className="number-checkbox-container">
               {Array.from({ length: 31 }, (_, i) => i + 1).map((number) => (
                 <div key={number} className="number-checkbox">
