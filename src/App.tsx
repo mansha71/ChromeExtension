@@ -71,6 +71,16 @@ function App() {
     });
   };
 
+  const handleResetTask = (index: number) => {
+    setCheckboxStatus((prevCheckboxStatus) => {
+      const updatedCheckboxStatus = [...prevCheckboxStatus];
+      for (let i = 0; i <= 30; i++) {
+        updatedCheckboxStatus[index][i] = false;
+      }
+      return updatedCheckboxStatus;
+    });
+  };
+
   return (
     <div className="app">
       <h1>Habit Tracker</h1>
@@ -106,6 +116,12 @@ function App() {
               onClick={() => handleDeleteTask(index)}
             >
               Delete
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => handleResetTask(index)}
+            >
+              Reset
             </button>
           </div>
         ))}
