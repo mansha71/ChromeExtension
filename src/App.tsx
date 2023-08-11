@@ -16,6 +16,7 @@ function App() {
     // gets previously saved habits from storage and sets it to storedHabits
     const storedHabits = localStorage.getItem("habits");
     const storedCheckbox = localStorage.getItem("checkboxs");
+    const storedStreaks = localStorage.getItem("streaks");
     //if there are habits
     if (storedHabits) {
       //sets the habit array to the storedHabits
@@ -23,6 +24,9 @@ function App() {
     }
     if (storedCheckbox) {
       setCheckboxStatus(JSON.parse(storedCheckbox));
+    }
+    if (storedStreaks) {
+      setStreaks(JSON.parse(storedStreaks));
     }
   }, []);
 
@@ -37,20 +41,10 @@ function App() {
     localStorage.setItem("checkboxs", JSON.stringify(checkboxStatus));
   }, [checkboxStatus]);
 
-  // useEffect(() => {
-  //   const newStreaks = checkboxStatus.map((habitStatus) => {
-  //     let streak = 0;
-  //     for (let i = 0; i < habitStatus.length; i++) {
-  //       if (habitStatus[i]) {
-  //         streak++;
-  //       } else {
-  //         break;
-  //       }
-  //     }
-  //     return streak;
-  //   });
-  //   setStreaks(newStreaks);
-  // }, [checkboxStatus]);
+  useEffect(() => {
+    // Save habits to local storage whenever habits change
+    localStorage.setItem("streaks", JSON.stringify(streaks));
+  }, [streaks]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setHabitInput(event.target.value);
@@ -80,20 +74,18 @@ function App() {
     setStreaks((prevState) => {
       const newState = [...prevState];
       let count = 0;
-      if (checkboxStatus[index][number] == false) {
-        newState[index] = count;
-        return newState;
-      } else {
-        for (let i = number - 1; i == 0; i--) {
-          if (checkboxStatus[index][i]) {
-            count++;
-          } else {
-            break;
-          }
+
+      // Starting from the clicked checkbox's previous day
+      for (let i = number - 1; i >= 0; i--) {
+        if (checkboxStatus[index][i] == true) {
+          count++;
+        } else {
+          break; // Streak is broken
         }
-        newState[index] = count;
-        return newState;
       }
+
+      newState[index] = count + 1; // Increment streak by 1 (including the clicked day)
+      return newState;
     });
   };
 
