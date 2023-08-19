@@ -1,1 +1,1 @@
-Habit Spark is a chrome extension that helps the user track their progress on any habits they wish to pursue.
+Habit Spark is a chrome extension that helps the user track their progress on any habits they wish to pursue. Get the extension here on the chrome extension store: https://chrome.google.com/webstore/detail/habit-spark/ojpmjllgmdfbaojbhhnhimgbajfaddpa
